@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>brony&#39;s blog</title>
+  <title>小马哥&#39;s blog</title>
   
   <subtitle>一条梦想成为技术宅的咸鱼</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="mayongjian.top/"/>
   <updated>2020-05-19T08:59:34.586Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>mayongjian.top/</id>
   
   <author>
-    <name>brony</name>
+    <name>小马哥</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>臧冰涛个傻逼</title>
-    <link href="http://yoursite.com/2020/05/19/%E8%87%A7%E5%86%B0%E6%B6%9B%E4%B8%AA%E5%82%BB%E9%80%BC/"/>
-    <id>http://yoursite.com/2020/05/19/%E8%87%A7%E5%86%B0%E6%B6%9B%E4%B8%AA%E5%82%BB%E9%80%BC/</id>
+    <link href="mayongjian.top/2020/05/19/%E8%87%A7%E5%86%B0%E6%B6%9B%E4%B8%AA%E5%82%BB%E9%80%BC/"/>
+    <id>mayongjian.top/2020/05/19/%E8%87%A7%E5%86%B0%E6%B6%9B%E4%B8%AA%E5%82%BB%E9%80%BC/</id>
     <published>2020-05-19T08:59:34.000Z</published>
     <updated>2020-05-19T08:59:34.586Z</updated>
     
