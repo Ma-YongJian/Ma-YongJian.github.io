@@ -130,7 +130,7 @@
 
 
 
-  <meta name="baidu-site-verification" content="gd2I4v6F0r" />
+
   <title>小马哥's blog</title>
   
 
@@ -308,6 +308,7 @@
         
 
         <div class="post-meta">
+	  
           <span class="post-time">
             
               <span class="post-meta-item-icon">
@@ -439,6 +440,7 @@
         
 
         <div class="post-meta">
+	  
           <span class="post-time">
             
               <span class="post-meta-item-icon">
@@ -727,7 +729,7 @@
   
 </div>
 
-
+<!-- 
   <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
@@ -739,7 +741,7 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
 
 
-
+ -->
 
 <!-- 新增访客统计代码 -->
 
@@ -761,6 +763,25 @@
     </span>
 </div>
 <!-- 新增访客统计代码 END-->
+
+<!-- 在网页底部添加网站运行时间 -->
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("05/01/2020 00:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "Run for "+dnum+" Days ";
+        document.getElementById("times").innerHTML = hnum + " Hours " + mnum + " m " + snum + " s";
+    }
+setInterval("createtime()",250);
+</script>
         
 
 
@@ -916,6 +937,37 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
 
   
   
