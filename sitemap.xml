@@ -2,14 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>mayongjian.top/lib/three/package.json</loc>
+    <loc>mayongjian.top/about/index.html</loc>
+    
+    <lastmod>2020-06-02T03:11:56.859Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>mayongjian.top/tags/index.html</loc>
+    
+    <lastmod>2020-06-02T03:10:48.605Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>mayongjian.top/categories/index.html</loc>
+    
+    <lastmod>2020-06-02T03:10:08.282Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>mayongjian.top/lib/three/renovate.json</loc>
     
     <lastmod>2020-05-26T06:41:33.664Z</lastmod>
     
   </url>
   
   <url>
-    <loc>mayongjian.top/lib/three/renovate.json</loc>
+    <loc>mayongjian.top/lib/three/package.json</loc>
     
     <lastmod>2020-05-26T06:41:33.664Z</lastmod>
     
@@ -33,20 +54,6 @@
     <loc>mayongjian.top/2020/05/24/%E6%89%80%E6%9C%89%E7%9A%84%E9%81%87%E8%A7%81%EF%BC%8C%E9%83%BD%E6%98%AF%E4%B8%80%E7%A7%8D%E5%81%BF%E8%BF%98/</loc>
     
     <lastmod>2020-05-24T08:52:18.449Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>mayongjian.top/tags/index.html</loc>
-    
-    <lastmod>2020-05-24T03:07:03.624Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>mayongjian.top/categories/index-1.html</loc>
-    
-    <lastmod>2020-05-24T03:06:01.867Z</lastmod>
     
   </url>
   
