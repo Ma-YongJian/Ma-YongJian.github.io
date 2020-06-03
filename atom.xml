@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mayongjian.top/"/>
-  <updated>2020-05-24T08:54:39.272Z</updated>
+  <updated>2020-06-03T09:45:44.913Z</updated>
   <id>https://mayongjian.top/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>微服务核心架构梳理</title>
+    <link href="https://mayongjian.top/2020/06/03/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E6%A2%B3%E7%90%86/"/>
+    <id>https://mayongjian.top/2020/06/03/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E6%A2%B3%E7%90%86/</id>
+    <published>2020-06-03T06:12:14.621Z</published>
+    <updated>2020-06-03T09:45:44.913Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Hello，Microservices&quot;&gt;&lt;a href=&quot;#Hello，Microservices&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>仓央嘉措诗集</title>
