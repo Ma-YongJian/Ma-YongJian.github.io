@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://mayongjian.top/about/index.html</loc>
+    
+    <lastmod>2020-06-03T01:49:33.808Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://mayongjian.top/tags/index.html</loc>
     
     <lastmod>2020-06-02T08:28:09.596Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://mayongjian.top/categories/index.html</loc>
     
     <lastmod>2020-06-02T08:27:02.026Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://mayongjian.top/about/index.html</loc>
-    
-    <lastmod>2020-06-02T08:26:17.164Z</lastmod>
     
   </url>
   
