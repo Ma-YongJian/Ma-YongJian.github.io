@@ -88,16 +88,20 @@
 
 
 
-<meta name="description" content="《所有的遇见，都是一种偿还》 佛说：“前世五百次的回眸，才换来今生的擦肩而过。” 每一个相遇都是久别重逢，因为我们的缘分是生世轮回的，此刻你认识每一个人，都是前世的旧友，我们见过，只是我们都过了桥，喝了孟婆汤，就把彼此忘了。 今生再见，都是为了还上辈子欠下的债，缘深缘浅，在于欠债多少，欠得多，相伴的时间多一点，欠得少，相处的时间少一点。 正应了那句“若无相欠，怎会相见。” -01- 小说《夏至未至">
+<meta name="description" content="前言用户在操作我们系统的过程中，针对一些重要的业务数据进行增删改查的时候，我们希望记录一下用户的操作行为，以便发生问题时能及时的找到依据，这种日志就是业务系统的操作日志。 本篇我们来探讨下常见操作日志的实现方案和可行性 常见的操作日志类型 用户登录日志 重要数据查询日志 （但电商可能不重要的数据也做埋点，比如在淘宝上你搜索什么商品，即使不买，一段时间内首页也会给你推荐类似的东西） 重要数据变更日">
 <meta property="og:type" content="article">
-<meta property="og:title" content="所有的遇见，都是一种偿还">
-<meta property="og:url" content="https://mayongjian.top/2020/05/24/%E6%89%80%E6%9C%89%E7%9A%84%E9%81%87%E8%A7%81%EF%BC%8C%E9%83%BD%E6%98%AF%E4%B8%80%E7%A7%8D%E5%81%BF%E8%BF%98/index.html">
+<meta property="og:title" content="日志">
+<meta property="og:url" content="https://mayongjian.top/2020/06/04/%E6%97%A5%E5%BF%97/index.html">
 <meta property="og:site_name" content="小马哥&#39;s Blog">
-<meta property="og:description" content="《所有的遇见，都是一种偿还》 佛说：“前世五百次的回眸，才换来今生的擦肩而过。” 每一个相遇都是久别重逢，因为我们的缘分是生世轮回的，此刻你认识每一个人，都是前世的旧友，我们见过，只是我们都过了桥，喝了孟婆汤，就把彼此忘了。 今生再见，都是为了还上辈子欠下的债，缘深缘浅，在于欠债多少，欠得多，相伴的时间多一点，欠得少，相处的时间少一点。 正应了那句“若无相欠，怎会相见。” -01- 小说《夏至未至">
-<meta property="article:published_time" content="2020-05-24T08:50:55.806Z">
-<meta property="article:modified_time" content="2020-05-24T08:52:18.449Z">
+<meta property="og:description" content="前言用户在操作我们系统的过程中，针对一些重要的业务数据进行增删改查的时候，我们希望记录一下用户的操作行为，以便发生问题时能及时的找到依据，这种日志就是业务系统的操作日志。 本篇我们来探讨下常见操作日志的实现方案和可行性 常见的操作日志类型 用户登录日志 重要数据查询日志 （但电商可能不重要的数据也做埋点，比如在淘宝上你搜索什么商品，即使不买，一段时间内首页也会给你推荐类似的东西） 重要数据变更日">
+<meta property="og:image" content="https://mayongjian.top/images/%E6%97%A5%E5%BF%97%E7%BD%AE%E9%A1%B6.jpg">
+<meta property="og:image" content="https://mayongjian.top/images/Binlog%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg">
+<meta property="og:image" content="https://mayongjian.top/images/binlog%E5%BA%93%E8%A1%A8%E8%AE%BE%E8%AE%A1%E8%A7%86%E5%9B%BE.jpg">
+<meta property="article:published_time" content="2020-06-04T02:16:43.831Z">
+<meta property="article:modified_time" content="2020-06-04T02:35:24.955Z">
 <meta property="article:author" content="小马哥">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mayongjian.top/images/%E6%97%A5%E5%BF%97%E7%BD%AE%E9%A1%B6.jpg">
 
 
 
@@ -127,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="https://mayongjian.top/2020/05/24/所有的遇见，都是一种偿还/"/>
+  <link rel="canonical" href="https://mayongjian.top/2020/06/04/日志/"/>
 
 
 
 
 
-  <title>所有的遇见，都是一种偿还 | 小马哥's Blog</title>
+  <title>日志 | 小马哥's Blog</title>
   
 
 
@@ -318,7 +322,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://mayongjian.top/2020/05/24/%E6%89%80%E6%9C%89%E7%9A%84%E9%81%87%E8%A7%81%EF%BC%8C%E9%83%BD%E6%98%AF%E4%B8%80%E7%A7%8D%E5%81%BF%E8%BF%98/">
+    <link itemprop="mainEntityOfPage" href="https://mayongjian.top/2020/06/04/%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小马哥">
@@ -335,7 +339,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">所有的遇见，都是一种偿还</h1>
+          <h1 class="post-title" itemprop="name headline">日志</h1>
         
 
         <div class="post-meta">
@@ -348,8 +352,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-24T16:50:55+08:00">
-                2020-05-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-04T10:16:43+08:00">
+                2020-06-04
               </time>
             
 
@@ -364,8 +368,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-05-24T16:52:18+08:00">
-                2020-05-24
+              <time title="更新于" itemprop="dateModified" datetime="2020-06-04T10:35:24+08:00">
+                2020-06-04
               </time>
             
           </span>
@@ -403,46 +407,75 @@
       
 
       
-        <p>《所有的遇见，都是一种偿还》</p>
-<p>佛说：“前世五百次的回眸，才换来今生的擦肩而过。”</p>
-<p>每一个相遇都是久别重逢，因为我们的缘分是生世轮回的，此刻你认识每一个人，都是前世的旧友，我们见过，只是我们都过了桥，喝了孟婆汤，就把彼此忘了。</p>
-<p>今生再见，都是为了还上辈子欠下的债，缘深缘浅，在于欠债多少，欠得多，相伴的时间多一点，欠得少，相处的时间少一点。</p>
-<p>正应了那句“若无相欠，怎会相见。”</p>
-<p>-01-</p>
-<p>小说《夏至未至》里曾提过一个天使的说法：</p>
-<p> 每一个人都有一个一直守护着他（她）的天使，这个天使如果觉得你的生活太过悲哀，你的心情太过难过，那么他就会化身成为你身边的某一个人。</p>
-<p>也许是你的朋友，也许是你的恋人，也许是你的父母，也许是你仅仅见过一面的陌生人，这些人安静地出现在你的生命里，陪你度过一小段快乐的时光，然后他再不动声色的离开。</p>
-<p>相遇这件事，到底是上辈子的债为了还才遇见，还是因为守护天使的庇佑化身而来，我不得而知。</p>
-<p> 我只知道，差一点就一辈子的人，却再也没出现；</p>
-<p> 我只知道，当时相处时，我们畅快的笑，痛快的哭，我们曾那样真切的规划过未来，却终是走散；</p>
-<p>我只知道，有些人助我帮我，改变了我一生的轨迹，有些人待我似亲人，爱我如生命，他们就在那里，却再不肯见我。</p>
-<p> 世界上有70亿人口，我们这一生会遇到大约2920万人，在这茫茫人海里，两个人相爱的概率是0.00049。</p>
-<p>可是我再怎样庆幸着这难得的相遇，再怎样努力的经营，我甚至傻傻的恳求和挽留，却如何也掌控不了我们的未来。</p>
-<p>- 02 -</p>
-<p>这是流行离开的世界，但我们都不擅长告别 </p>
-<p>若说所有的相遇都是久别重逢，前世都欠下了，今生为何还是要走？</p>
-<p>知乎上有这样一个话题《如果世间所有的相遇都是久别重逢，那离别是为了什么？》</p>
-<p>有个回答很喜欢：</p>
-<p>“遇见，是两个人的事；离开，却是一个人的决定。遇见是一个开始，离开却是为了遇见下一个离开。这是一个流行离开的世界，但是我们都不擅长告别。”</p>
-<p>生的那一刻就是在一步步走向终结，遇见也是，相识相处的每分每秒都是在走向分别。</p>
-<p>只是我们从来就没想过分别到来的会如此的快，我们还未来得及演习。</p>
-<p>很喜欢的一部电影《一代宗师》，宫二这一世，未嫁娶，不传艺，争着一口气，直到最后。</p>
-<p>她对叶问有情，但他们只有情缘，没有结果，这一世的缘，是必定要绝的。</p>
-<p>记得里面有个画面，叶先生说：“你我之间，本没有恩怨。有的，只是一段缘分。”</p>
-<p>她黯然失神：“是的，我们之间，是一段缘分。或许今世的缘分，可以追溯到前世，寄望于后世。今世的愿绝了，死生契阔，我们每一世，都有愿成说。”</p>
-<p>是隐忍还是看开，总之看到她说的这句话时，内心相当的无奈又无力，明明那样相爱相惜，但还是主动选择了分开。</p>
-<p>电影里有句话这样说:“无生无死，才是最好的未来。”</p>
-<p>它说：“人生若无憾，那该多无趣啊。”</p>
-<p>当真是通透，还是逼自己断舍离，这样的决然和平静的一句话，我反复咀嚼了无数遍，聚散有时，就这样吧。</p>
-<p>- 03 -</p>
-<p>后会无期，天总会晴</p>
-<p>《本杰明·巴顿奇事》里说：“我们注定要失去我们所爱的人，要不然我们怎么会知道他们对我们多么的重要。”</p>
-<p>《玻璃之城》里说：“我们分开的日子，你不在我身边，我才最爱你。”</p>
-<p>你走后，我学会了自强，你不在后，我才懂得了珍惜，才真正的思考了自己的未来，明白了什么是自己想要和真心想做的，更学会了如何去爱。</p>
-<p>谢谢你的离开，我开始警醒，开始认真的活，谢谢你的决绝让我变成了更好的人。</p>
-<p>电影《后会无期》的最后有这么一段话：“跟人道别的时候，还是要用力一点，因为你多说一句，很可能是最后一句，多看一眼，指不定就是最后一眼……” </p>
-<p>很多时候，一转身，就是一辈子，所以相见时，要心存感激，像第一次，离别时，要好好告别，像最后一次。</p>
-<p>因为所有的遇见，都是一种偿还，你永远不知道，哪一天他（她）的使命得以终结，明天你们再不会见。</p>
+        <p><img src="/images/%E6%97%A5%E5%BF%97%E7%BD%AE%E9%A1%B6.jpg" alt="alt"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>用户在操作我们系统的过程中，针对一些重要的业务数据进行增删改查的时候，我们希望记录一下用户的操作行为，以便发生问题时能及时的找到依据，这种日志就是业务系统的操作日志。</p>
+<p>本篇我们来探讨下常见操作日志的实现方案和可行性</p>
+<h2 id="常见的操作日志类型"><a href="#常见的操作日志类型" class="headerlink" title="常见的操作日志类型"></a>常见的操作日志类型</h2><ul>
+<li>用户登录日志</li>
+<li>重要数据查询日志 （但电商可能不重要的数据也做埋点，比如在淘宝上你搜索什么商品，即使不买，一段时间内首页也会给你推荐类似的东西）</li>
+<li>重要数据变更日志 （如密码变更，权限变更，数据修改等）</li>
+<li>数据删除日志</li>
+<li>……</li>
+</ul>
+<p>总结来说，就是重要的增删改查根据业务的需要来做操作日志的埋点。</p>
+<h2 id="实现方案对比"><a href="#实现方案对比" class="headerlink" title="实现方案对比"></a>实现方案对比</h2><h3 id="基于AOP（切面）传统的实现方案"><a href="#基于AOP（切面）传统的实现方案" class="headerlink" title="基于AOP（切面）传统的实现方案"></a>基于AOP（切面）传统的实现方案</h3><ul>
+<li>优点：实现思路简单；</li>
+<li>缺点：增加数据库的负担，强依赖前端的传参，不方便拓展，不支持批量操作，不支持多表关联；</li>
+</ul>
+<h3 id="基于数据库Binlog"><a href="#基于数据库Binlog" class="headerlink" title="基于数据库Binlog"></a>基于数据库Binlog</h3><ul>
+<li>优点：解除了数据新旧变化的耦合，支持批量操作，方便多表关联拓展，不依赖开发语言；</li>
+<li>缺点：数据库表设计需要统一的约定；</li>
+</ul>
+<h2 id="方案实现细节"><a href="#方案实现细节" class="headerlink" title="方案实现细节"></a>方案实现细节</h2><h4 id="一、基于AOP切面-注解的传统方案"><a href="#一、基于AOP切面-注解的传统方案" class="headerlink" title="一、基于AOP切面+注解的传统方案"></a>一、基于AOP切面+注解的传统方案</h4><p>传统的做法就是切面+注解的方式，这种对代码的侵入性不强，通常记录ip、业务模块、操作账号、操作场景、操作来源等等，一般在注解+拦截器里这些值都拿得到，如下图所示：</p>
+<p>这种常见的我们在通用方法都可以处理，但是在数据变更方面，一直没有较好的实现方式，比如数据在变更前是多少，变更后是多少。</p>
+<p>以我们以前实现的一套方案来说，基于数据变更的记录方式不仅要和需求方约定好模板（上百个字段的不可能都做展示和记录），也要和前端做一些约定，比如在修改之前的值是多少，修改后的值是多少，如下代码客官请看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;新值不能为空&quot;)</span><br><span class="line">@UpdateNewDataOperationLog</span><br><span class="line">private T newData;</span><br><span class="line"></span><br><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;旧值不能为空&quot;)</span><br><span class="line">@UpdateOldDataOperationLog</span><br><span class="line">private T oldData;</span><br></pre></td></tr></table></figure>
+
+<h3 id="存在的问题："><a href="#存在的问题：" class="headerlink" title="存在的问题："></a>存在的问题：</h3><ul>
+<li>1.旧值如果不多查询一次数据库则需要依赖前端把旧值封装到oldData对象中，很有可能已经不是修改前的值；</li>
+<li>2.无法处理批量的List数据；</li>
+<li>3.不支持多表操作；</li>
+</ul>
+<p>再以一个场景为例，再删除之前需要记录删除前的值，是不是还得再查一次~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@PostMapping(&quot;&#x2F;delete&quot;)</span><br><span class="line">@ApiOperation(value &#x3D; &quot;删除用户信息&quot;, notes &#x3D; &quot;删除用户信息&quot;)</span><br><span class="line">@DeleteOperationLog(system &#x3D; SystemNameNewEnum.SYS_JMS_LMDM, module &#x3D; ModuleNameNewEnum.LMDM_AUTH, table &#x3D; LogBaseTableNameEnum.TABLE_USER, methodName &#x3D; &quot;detail&quot;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、基于数据库Binlog-方案"><a href="#二、基于数据库Binlog-方案" class="headerlink" title="二、基于数据库Binlog 方案"></a>二、基于数据库Binlog 方案</h4><p>系统架构图如下：</p>
+<p><img src="/images/Binlog%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" alt="alt"></p>
+<p><strong>「主要分为3块：」</strong></p>
+<ul>
+<li><p>1：业务应用 生成每次操作的traceid，并更新到操作的业务表中，发送1条业务消息，包含当前操作的操作人相关的信息；</p>
+</li>
+<li><p>2：日志收集应用 对业务日志和转换后的binlog日志做整合，提供对外的日志查询搜索API；</p>
+</li>
+<li><p>3：日志处理应用</p>
+</li>
+<li><ul>
+<li>利用canal采集和解析业务库的binlog日志并投递到kafka中，解析后的记录中记录了当前操作的操作类型，如属于删除、修改、新增,和新旧值的记录，格式如下：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;122158992930664499&quot;,&quot;bill_type&quot;:&quot;1&quot;,&quot;create_time&quot;:&quot;2020-04-2609:15:13&quot;,&quot;update_time&quot;:&quot;2020-04-2613:45:46&quot;,&quot;version&quot;:&quot;2&quot;,&quot;trace_id&quot;:&quot;exclude-f04ff706673d4e98a757396efb711173&quot;&#125;],</span><br><span class="line">&quot;database&quot;:&quot;yl_spmibill_8&quot;,</span><br><span class="line">&quot;es&quot;:1587879945200,</span><br><span class="line">&quot;id&quot;:17161259,</span><br><span class="line">&quot;isDdl&quot;:false,</span><br><span class="line">&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;bigint(20)&quot;,</span><br><span class="line">&quot;bill_type&quot;:&quot;tinyint(2)&quot;,</span><br><span class="line">&quot;create_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;update_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;version&quot;:&quot;int(11)&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;varchar(50)&quot;&#125;,</span><br><span class="line">&quot;old&quot;:[&#123;&quot;update_time&quot;:&quot;2020-04-2613:45:45&quot;,</span><br><span class="line">&quot;version&quot;:&quot;1&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;exclude-36aef98585db4e7a98f9694c8ef28b8c&quot;&#125;],</span><br><span class="line">&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,</span><br><span class="line">&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;bill_type&quot;:-6,&quot;create_time&quot;:93,&quot;update_time&quot;:93,&quot;version&quot;:4,&quot;trace_id&quot;:12&#125;,</span><br><span class="line">&quot;table&quot;:&quot;xxx_transfer_bill_117&quot;,</span><br><span class="line">&quot;ts&quot;:1587879945698,&quot;type&quot;:&quot;UPDATE&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>处理完binlon日志转换后的操作日志，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;id&quot;:&quot;120716921250250776&quot;,</span><br><span class="line">&quot;relevanceInfo&quot;:&quot;XX0000097413282,&quot;,</span><br><span class="line">&quot;remark&quot;:&quot;签收财务网点编码由【】改为【380000】，</span><br><span class="line">签收网点名称由【】改为【泉州南安网点】，签收网点code由【】改为【2534104】，运单状态code由【204】改为【205】，签收财务网点名称由【】改为【福建代理区】，签收网点id由【0】改为【461】，签收标识,1是，0否由【0】改为【1】，签收时间由【null】改为【2020-04-24 21:09:47】，签收财务网点id由【0】改为【400】，&quot;,</span><br><span class="line">&quot;traceId&quot;:&quot;120716921250250775&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="库表设计"><a href="#库表设计" class="headerlink" title="库表设计"></a>库表设计</h3><ul>
+<li>1：所有业务系统表需要添加trace_id字段，每次操作生成一个随机字符串并保存到业务表中；</li>
+<li>2：日志收集应用库表设计</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;table_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#39;id&#39;,</span><br><span class="line">  &#96;database_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;数据库名&#39;,</span><br><span class="line">  &#96;table_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 数据库表名&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  UNIQUE KEY &#96;unq_data_name_table_name&#96; (&#96;database_name&#96;,&#96;table_name&#96;) USING BTREE COMMENT &#39;数据库名表名联合索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;35 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  &#96;table_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 数据库&#39;,</span><br><span class="line">  &#96;field_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 中文名称&#39;,</span><br><span class="line">  &#96;enum_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否枚举字段(1:是,0:否)&#39;,</span><br><span class="line">  &#96;relevance_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否是关联字段(1:是,0否)&#39;,</span><br><span class="line">  &#96;sort&#96; int(11) DEFAULT NULL COMMENT &#39;排序&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;idx_table_config_id&#96; (&#96;table_config_id&#96;) USING BTREE COMMENT &#39;表ID索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;2431 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库字段配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_value&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL,</span><br><span class="line">  &#96;field_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field_key&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 枚举&#39;,</span><br><span class="line">  &#96;filed_value&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;枚举名称&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;ids_field_config_id&#96; (&#96;field_config_id&#96;) USING BTREE</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据字典配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/binlog%E5%BA%93%E8%A1%A8%E8%AE%BE%E8%AE%A1%E8%A7%86%E5%9B%BE.jpg" alt="alt"></p>
+<h2 id="基于binlog实现方案未来规划"><a href="#基于binlog实现方案未来规划" class="headerlink" title="基于binlog实现方案未来规划"></a>基于binlog实现方案未来规划</h2><ol>
+<li>优化发送业务消息的实现，使用切面拦截减少对业务代码的侵入；</li>
+<li>目前暂时不支持对多表关联操作日志记录，需要拓展；</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文以操作日志为题材讨论了操作日志的实现方案和可行性，并且都已经在功能上进行实现，其中使用aop方案也是大部分中小企业的首选实现方案，但是在一些金融领域以及erp相关系统，对操作日志记录明细要求极高，常见技术方案很难满足，即使能够满足也会带来一些代码强侵入以及性能问题。</p>
+<p>所以我们又讨论了基于binlog实现的方案，该方案虽然比对aop来说增强了技术的复杂性，但是对于有一定技术积累的团队来说不算什么难事，并且该方案我们都实现了上线，并且解决了代码层面上的侵入，属于跨语言级别的，相信对读者还是有一定的启发。</p>
 
       
     </div>
@@ -498,7 +531,7 @@
   </li>
   <li class="post-copyright-link">
   <strong>本文链接：</strong>
-  <a href="https://mayongjian.top/2020/05/24/所有的遇见，都是一种偿还/" title="所有的遇见，都是一种偿还">https://mayongjian.top/2020/05/24/所有的遇见，都是一种偿还/</a>
+  <a href="https://mayongjian.top/2020/06/04/日志/" title="日志">https://mayongjian.top/2020/06/04/日志/</a>
 </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -520,15 +553,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/06/03/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E6%A2%B3%E7%90%86/" rel="next" title="微服务核心架构梳理">
+                <i class="fa fa-chevron-left"></i> 微服务核心架构梳理
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/05/24/%E4%BB%93%E5%A4%AE%E5%98%89%E6%8E%AA%E8%AF%97%E9%9B%86/" rel="prev" title="仓央嘉措诗集">
-                仓央嘉措诗集 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -591,8 +624,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -699,6 +741,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的操作日志类型"><span class="nav-number">2.</span> <span class="nav-text">常见的操作日志类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方案对比"><span class="nav-number">3.</span> <span class="nav-text">实现方案对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于AOP（切面）传统的实现方案"><span class="nav-number">3.1.</span> <span class="nav-text">基于AOP（切面）传统的实现方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于数据库Binlog"><span class="nav-number">3.2.</span> <span class="nav-text">基于数据库Binlog</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案实现细节"><span class="nav-number">4.</span> <span class="nav-text">方案实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、基于AOP切面-注解的传统方案"><span class="nav-number">4.0.1.</span> <span class="nav-text">一、基于AOP切面+注解的传统方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存在的问题："><span class="nav-number">4.1.</span> <span class="nav-text">存在的问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二、基于数据库Binlog-方案"><span class="nav-number">4.1.1.</span> <span class="nav-text">二、基于数据库Binlog 方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#库表设计"><span class="nav-number">4.2.</span> <span class="nav-text">库表设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于binlog实现方案未来规划"><span class="nav-number">5.</span> <span class="nav-text">基于binlog实现方案未来规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
