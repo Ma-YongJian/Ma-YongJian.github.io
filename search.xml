@@ -106,20 +106,122 @@
 ]]></content>
   </entry>
   <entry>
-    <title>仓央嘉措诗集</title>
-    <url>/2020/05/24/%E4%BB%93%E5%A4%AE%E5%98%89%E6%8E%AA%E8%AF%97%E9%9B%86/</url>
-    <content><![CDATA[<p>1.住进布达拉宫，我是雪域最大的王。流浪在拉萨街头，我是世间最美的情郎。</p>
-<p>2.一个人需要隐藏多少秘密，才能巧妙地度过一生，这佛光闪闪的高原，三步两步便是天堂，却仍有那么多人，因心事过重而走不动。</p>
-<p>3.人生若只如初见，我是少年人，我有佛心也有凡心。向佛祖求参悟不了的惑，与有情人做快乐尽兴的事，不妄一场人生。</p>
-<p>4.我愿为你颠倒红尘，这是你我的命运。有一日，当你登临高峰，面向大海，你会看到一个云游四方的行僧。你的眼中有他，他却在回眸之间将你印入了心底。他是你的。</p>
-<p>5.最美是我的一生。每个人的一生，真实而美好。你所拥有即拥有，失去却不意味着失去。失去是另一种拥有，你要相信。你的失败与伟大，新生与寂灭，犹如花开花谢，简静自持，珍贵永远。</p>
-<p>6.我在人世之前，心随人世而去。我记得佛的话语，却忘记相问的初衷。我在人海之中寻觅一个日月永不相见的起源，如同，我背弃凡尘之后又惦念追随。</p>
-<p>7.我是天生的情痴，一日日不死心，心中的光明灭了，仍要去寻黑暗的火种，点燃永生。倘若永夜不变，我也要拉住一个人的手，与她共度。</p>
-<p>8.此时，此地，于日光之城，于红日神山，于观世音的圣殿，我是罗桑仁钦·仓央嘉措。</p>
-<p>9.缘起即灭，缘生已空，我的少年，失语多于失梦。我幽游深处探寻莲花的芬芳与清寂，意外寻到了最爱之人，她对我说：“你就是我的莲花。”</p>
-<p>10.世间事，除了生死，哪一件事不是闲事。——仓央嘉措</p>
-<p>11.我是佛前一朵莲花，我到人世来，被世人所误。我是凡尘最美的莲花，我不是普度众生的佛，我来寻我今生的情，与她谈一场风花雪月的爱。</p>
-<p>12.第一最好不相见，免得彼此相爱恋；第二最好不熟知，免得彼此苦相思！——仓央嘉措</p>
+    <title>日志</title>
+    <url>/2020/06/04/%E6%97%A5%E5%BF%97/</url>
+    <content><![CDATA[<p><img src="/images/%E6%97%A5%E5%BF%97%E7%BD%AE%E9%A1%B6.jpg" alt="alt"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>用户在操作我们系统的过程中，针对一些重要的业务数据进行增删改查的时候，我们希望记录一下用户的操作行为，以便发生问题时能及时的找到依据，这种日志就是业务系统的操作日志。</p>
+<p>本篇我们来探讨下常见操作日志的实现方案和可行性</p>
+<h2 id="常见的操作日志类型"><a href="#常见的操作日志类型" class="headerlink" title="常见的操作日志类型"></a>常见的操作日志类型</h2><ul>
+<li>用户登录日志</li>
+<li>重要数据查询日志 （但电商可能不重要的数据也做埋点，比如在淘宝上你搜索什么商品，即使不买，一段时间内首页也会给你推荐类似的东西）</li>
+<li>重要数据变更日志 （如密码变更，权限变更，数据修改等）</li>
+<li>数据删除日志</li>
+<li>……</li>
+</ul>
+<p>总结来说，就是重要的增删改查根据业务的需要来做操作日志的埋点。</p>
+<h2 id="实现方案对比"><a href="#实现方案对比" class="headerlink" title="实现方案对比"></a>实现方案对比</h2><h3 id="基于AOP（切面）传统的实现方案"><a href="#基于AOP（切面）传统的实现方案" class="headerlink" title="基于AOP（切面）传统的实现方案"></a>基于AOP（切面）传统的实现方案</h3><ul>
+<li>优点：实现思路简单；</li>
+<li>缺点：增加数据库的负担，强依赖前端的传参，不方便拓展，不支持批量操作，不支持多表关联；</li>
+</ul>
+<h3 id="基于数据库Binlog"><a href="#基于数据库Binlog" class="headerlink" title="基于数据库Binlog"></a>基于数据库Binlog</h3><ul>
+<li>优点：解除了数据新旧变化的耦合，支持批量操作，方便多表关联拓展，不依赖开发语言；</li>
+<li>缺点：数据库表设计需要统一的约定；</li>
+</ul>
+<h2 id="方案实现细节"><a href="#方案实现细节" class="headerlink" title="方案实现细节"></a>方案实现细节</h2><h4 id="一、基于AOP切面-注解的传统方案"><a href="#一、基于AOP切面-注解的传统方案" class="headerlink" title="一、基于AOP切面+注解的传统方案"></a>一、基于AOP切面+注解的传统方案</h4><p>传统的做法就是切面+注解的方式，这种对代码的侵入性不强，通常记录ip、业务模块、操作账号、操作场景、操作来源等等，一般在注解+拦截器里这些值都拿得到，如下图所示：</p>
+<p>这种常见的我们在通用方法都可以处理，但是在数据变更方面，一直没有较好的实现方式，比如数据在变更前是多少，变更后是多少。</p>
+<p>以我们以前实现的一套方案来说，基于数据变更的记录方式不仅要和需求方约定好模板（上百个字段的不可能都做展示和记录），也要和前端做一些约定，比如在修改之前的值是多少，修改后的值是多少，如下代码客官请看：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;新值不能为空&quot;)</span><br><span class="line">@UpdateNewDataOperationLog</span><br><span class="line">private T newData;</span><br><span class="line"></span><br><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;旧值不能为空&quot;)</span><br><span class="line">@UpdateOldDataOperationLog</span><br><span class="line">private T oldData;</span><br></pre></td></tr></table></figure>
+
+<h3 id="存在的问题："><a href="#存在的问题：" class="headerlink" title="存在的问题："></a>存在的问题：</h3><ul>
+<li>1.旧值如果不多查询一次数据库则需要依赖前端把旧值封装到oldData对象中，很有可能已经不是修改前的值；</li>
+<li>2.无法处理批量的List数据；</li>
+<li>3.不支持多表操作；</li>
+</ul>
+<p>再以一个场景为例，再删除之前需要记录删除前的值，是不是还得再查一次~</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@PostMapping(&quot;&#x2F;delete&quot;)</span><br><span class="line">@ApiOperation(value &#x3D; &quot;删除用户信息&quot;, notes &#x3D; &quot;删除用户信息&quot;)</span><br><span class="line">@DeleteOperationLog(system &#x3D; SystemNameNewEnum.SYS_JMS_LMDM, module &#x3D; ModuleNameNewEnum.LMDM_AUTH, table &#x3D; LogBaseTableNameEnum.TABLE_USER, methodName &#x3D; &quot;detail&quot;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、基于数据库Binlog-方案"><a href="#二、基于数据库Binlog-方案" class="headerlink" title="二、基于数据库Binlog 方案"></a>二、基于数据库Binlog 方案</h4><p>系统架构图如下：</p>
+<p><img src="/images/Binlog%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" alt="alt"></p>
+<p><strong>「主要分为3块：」</strong></p>
+<ul>
+<li><p>1：业务应用 生成每次操作的traceid，并更新到操作的业务表中，发送1条业务消息，包含当前操作的操作人相关的信息；</p>
+</li>
+<li><p>2：日志收集应用 对业务日志和转换后的binlog日志做整合，提供对外的日志查询搜索API；</p>
+</li>
+<li><p>3：日志处理应用</p>
+</li>
+<li><ul>
+<li>利用canal采集和解析业务库的binlog日志并投递到kafka中，解析后的记录中记录了当前操作的操作类型，如属于删除、修改、新增,和新旧值的记录，格式如下：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;122158992930664499&quot;,&quot;bill_type&quot;:&quot;1&quot;,&quot;create_time&quot;:&quot;2020-04-2609:15:13&quot;,&quot;update_time&quot;:&quot;2020-04-2613:45:46&quot;,&quot;version&quot;:&quot;2&quot;,&quot;trace_id&quot;:&quot;exclude-f04ff706673d4e98a757396efb711173&quot;&#125;],</span><br><span class="line">&quot;database&quot;:&quot;yl_spmibill_8&quot;,</span><br><span class="line">&quot;es&quot;:1587879945200,</span><br><span class="line">&quot;id&quot;:17161259,</span><br><span class="line">&quot;isDdl&quot;:false,</span><br><span class="line">&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;bigint(20)&quot;,</span><br><span class="line">&quot;bill_type&quot;:&quot;tinyint(2)&quot;,</span><br><span class="line">&quot;create_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;update_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;version&quot;:&quot;int(11)&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;varchar(50)&quot;&#125;,</span><br><span class="line">&quot;old&quot;:[&#123;&quot;update_time&quot;:&quot;2020-04-2613:45:45&quot;,</span><br><span class="line">&quot;version&quot;:&quot;1&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;exclude-36aef98585db4e7a98f9694c8ef28b8c&quot;&#125;],</span><br><span class="line">&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,</span><br><span class="line">&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;bill_type&quot;:-6,&quot;create_time&quot;:93,&quot;update_time&quot;:93,&quot;version&quot;:4,&quot;trace_id&quot;:12&#125;,</span><br><span class="line">&quot;table&quot;:&quot;xxx_transfer_bill_117&quot;,</span><br><span class="line">&quot;ts&quot;:1587879945698,&quot;type&quot;:&quot;UPDATE&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>处理完binlon日志转换后的操作日志，如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;id&quot;:&quot;120716921250250776&quot;,</span><br><span class="line">&quot;relevanceInfo&quot;:&quot;XX0000097413282,&quot;,</span><br><span class="line">&quot;remark&quot;:&quot;签收财务网点编码由【】改为【380000】，</span><br><span class="line">签收网点名称由【】改为【泉州南安网点】，签收网点code由【】改为【2534104】，运单状态code由【204】改为【205】，签收财务网点名称由【】改为【福建代理区】，签收网点id由【0】改为【461】，签收标识,1是，0否由【0】改为【1】，签收时间由【null】改为【2020-04-24 21:09:47】，签收财务网点id由【0】改为【400】，&quot;,</span><br><span class="line">&quot;traceId&quot;:&quot;120716921250250775&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="库表设计"><a href="#库表设计" class="headerlink" title="库表设计"></a>库表设计</h3><ul>
+<li>1：所有业务系统表需要添加trace_id字段，每次操作生成一个随机字符串并保存到业务表中；</li>
+<li>2：日志收集应用库表设计</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#39;id&#39;,</span><br><span class="line">  &#96;database_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;数据库名&#39;,</span><br><span class="line">  &#96;table_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 数据库表名&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  UNIQUE KEY &#96;unq_data_name_table_name&#96; (&#96;database_name&#96;,&#96;table_name&#96;) USING BTREE COMMENT &#39;数据库名表名联合索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;35 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  &#96;table_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 数据库&#39;,</span><br><span class="line">  &#96;field_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 中文名称&#39;,</span><br><span class="line">  &#96;enum_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否枚举字段(1:是,0:否)&#39;,</span><br><span class="line">  &#96;relevance_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否是关联字段(1:是,0否)&#39;,</span><br><span class="line">  &#96;sort&#96; int(11) DEFAULT NULL COMMENT &#39;排序&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;idx_table_config_id&#96; (&#96;table_config_id&#96;) USING BTREE COMMENT &#39;表ID索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;2431 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库字段配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_value&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL,</span><br><span class="line">  &#96;field_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field_key&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 枚举&#39;,</span><br><span class="line">  &#96;filed_value&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;枚举名称&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;ids_field_config_id&#96; (&#96;field_config_id&#96;) USING BTREE</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据字典配置表&#39;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/binlog%E5%BA%93%E8%A1%A8%E8%AE%BE%E8%AE%A1%E8%A7%86%E5%9B%BE.jpg" alt="alt"></p>
+<h2 id="基于binlog实现方案未来规划"><a href="#基于binlog实现方案未来规划" class="headerlink" title="基于binlog实现方案未来规划"></a>基于binlog实现方案未来规划</h2><ol>
+<li>优化发送业务消息的实现，使用切面拦截减少对业务代码的侵入；</li>
+<li>目前暂时不支持对多表关联操作日志记录，需要拓展；</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文以操作日志为题材讨论了操作日志的实现方案和可行性，并且都已经在功能上进行实现，其中使用aop方案也是大部分中小企业的首选实现方案，但是在一些金融领域以及erp相关系统，对操作日志记录明细要求极高，常见技术方案很难满足，即使能够满足也会带来一些代码强侵入以及性能问题。</p>
+<p>所以我们又讨论了基于binlog实现的方案，该方案虽然比对aop来说增强了技术的复杂性，但是对于有一定技术积累的团队来说不算什么难事，并且该方案我们都实现了上线，并且解决了代码层面上的侵入，属于跨语言级别的，相信对读者还是有一定的启发。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>所有的遇见，都是一种偿还</title>
+    <url>/2020/05/24/%E6%89%80%E6%9C%89%E7%9A%84%E9%81%87%E8%A7%81%EF%BC%8C%E9%83%BD%E6%98%AF%E4%B8%80%E7%A7%8D%E5%81%BF%E8%BF%98/</url>
+    <content><![CDATA[<p>《所有的遇见，都是一种偿还》</p>
+<p>佛说：“前世五百次的回眸，才换来今生的擦肩而过。”</p>
+<p>每一个相遇都是久别重逢，因为我们的缘分是生世轮回的，此刻你认识每一个人，都是前世的旧友，我们见过，只是我们都过了桥，喝了孟婆汤，就把彼此忘了。</p>
+<p>今生再见，都是为了还上辈子欠下的债，缘深缘浅，在于欠债多少，欠得多，相伴的时间多一点，欠得少，相处的时间少一点。</p>
+<p>正应了那句“若无相欠，怎会相见。”</p>
+<p>-01-</p>
+<p>小说《夏至未至》里曾提过一个天使的说法：</p>
+<p> 每一个人都有一个一直守护着他（她）的天使，这个天使如果觉得你的生活太过悲哀，你的心情太过难过，那么他就会化身成为你身边的某一个人。</p>
+<p>也许是你的朋友，也许是你的恋人，也许是你的父母，也许是你仅仅见过一面的陌生人，这些人安静地出现在你的生命里，陪你度过一小段快乐的时光，然后他再不动声色的离开。</p>
+<p>相遇这件事，到底是上辈子的债为了还才遇见，还是因为守护天使的庇佑化身而来，我不得而知。</p>
+<p> 我只知道，差一点就一辈子的人，却再也没出现；</p>
+<p> 我只知道，当时相处时，我们畅快的笑，痛快的哭，我们曾那样真切的规划过未来，却终是走散；</p>
+<p>我只知道，有些人助我帮我，改变了我一生的轨迹，有些人待我似亲人，爱我如生命，他们就在那里，却再不肯见我。</p>
+<p> 世界上有70亿人口，我们这一生会遇到大约2920万人，在这茫茫人海里，两个人相爱的概率是0.00049。</p>
+<p>可是我再怎样庆幸着这难得的相遇，再怎样努力的经营，我甚至傻傻的恳求和挽留，却如何也掌控不了我们的未来。</p>
+<p>- 02 -</p>
+<p>这是流行离开的世界，但我们都不擅长告别 </p>
+<p>若说所有的相遇都是久别重逢，前世都欠下了，今生为何还是要走？</p>
+<p>知乎上有这样一个话题《如果世间所有的相遇都是久别重逢，那离别是为了什么？》</p>
+<p>有个回答很喜欢：</p>
+<p>“遇见，是两个人的事；离开，却是一个人的决定。遇见是一个开始，离开却是为了遇见下一个离开。这是一个流行离开的世界，但是我们都不擅长告别。”</p>
+<p>生的那一刻就是在一步步走向终结，遇见也是，相识相处的每分每秒都是在走向分别。</p>
+<p>只是我们从来就没想过分别到来的会如此的快，我们还未来得及演习。</p>
+<p>很喜欢的一部电影《一代宗师》，宫二这一世，未嫁娶，不传艺，争着一口气，直到最后。</p>
+<p>她对叶问有情，但他们只有情缘，没有结果，这一世的缘，是必定要绝的。</p>
+<p>记得里面有个画面，叶先生说：“你我之间，本没有恩怨。有的，只是一段缘分。”</p>
+<p>她黯然失神：“是的，我们之间，是一段缘分。或许今世的缘分，可以追溯到前世，寄望于后世。今世的愿绝了，死生契阔，我们每一世，都有愿成说。”</p>
+<p>是隐忍还是看开，总之看到她说的这句话时，内心相当的无奈又无力，明明那样相爱相惜，但还是主动选择了分开。</p>
+<p>电影里有句话这样说:“无生无死，才是最好的未来。”</p>
+<p>它说：“人生若无憾，那该多无趣啊。”</p>
+<p>当真是通透，还是逼自己断舍离，这样的决然和平静的一句话，我反复咀嚼了无数遍，聚散有时，就这样吧。</p>
+<p>- 03 -</p>
+<p>后会无期，天总会晴</p>
+<p>《本杰明·巴顿奇事》里说：“我们注定要失去我们所爱的人，要不然我们怎么会知道他们对我们多么的重要。”</p>
+<p>《玻璃之城》里说：“我们分开的日子，你不在我身边，我才最爱你。”</p>
+<p>你走后，我学会了自强，你不在后，我才懂得了珍惜，才真正的思考了自己的未来，明白了什么是自己想要和真心想做的，更学会了如何去爱。</p>
+<p>谢谢你的离开，我开始警醒，开始认真的活，谢谢你的决绝让我变成了更好的人。</p>
+<p>电影《后会无期》的最后有这么一段话：“跟人道别的时候，还是要用力一点，因为你多说一句，很可能是最后一句，多看一眼，指不定就是最后一眼……” </p>
+<p>很多时候，一转身，就是一辈子，所以相见时，要心存感激，像第一次，离别时，要好好告别，像最后一次。</p>
+<p>因为所有的遇见，都是一种偿还，你永远不知道，哪一天他（她）的使命得以终结，明天你们再不会见。</p>
 ]]></content>
   </entry>
   <entry>
@@ -303,122 +405,42 @@
 ]]></content>
   </entry>
   <entry>
-    <title>所有的遇见，都是一种偿还</title>
-    <url>/2020/05/24/%E6%89%80%E6%9C%89%E7%9A%84%E9%81%87%E8%A7%81%EF%BC%8C%E9%83%BD%E6%98%AF%E4%B8%80%E7%A7%8D%E5%81%BF%E8%BF%98/</url>
-    <content><![CDATA[<p>《所有的遇见，都是一种偿还》</p>
-<p>佛说：“前世五百次的回眸，才换来今生的擦肩而过。”</p>
-<p>每一个相遇都是久别重逢，因为我们的缘分是生世轮回的，此刻你认识每一个人，都是前世的旧友，我们见过，只是我们都过了桥，喝了孟婆汤，就把彼此忘了。</p>
-<p>今生再见，都是为了还上辈子欠下的债，缘深缘浅，在于欠债多少，欠得多，相伴的时间多一点，欠得少，相处的时间少一点。</p>
-<p>正应了那句“若无相欠，怎会相见。”</p>
-<p>-01-</p>
-<p>小说《夏至未至》里曾提过一个天使的说法：</p>
-<p> 每一个人都有一个一直守护着他（她）的天使，这个天使如果觉得你的生活太过悲哀，你的心情太过难过，那么他就会化身成为你身边的某一个人。</p>
-<p>也许是你的朋友，也许是你的恋人，也许是你的父母，也许是你仅仅见过一面的陌生人，这些人安静地出现在你的生命里，陪你度过一小段快乐的时光，然后他再不动声色的离开。</p>
-<p>相遇这件事，到底是上辈子的债为了还才遇见，还是因为守护天使的庇佑化身而来，我不得而知。</p>
-<p> 我只知道，差一点就一辈子的人，却再也没出现；</p>
-<p> 我只知道，当时相处时，我们畅快的笑，痛快的哭，我们曾那样真切的规划过未来，却终是走散；</p>
-<p>我只知道，有些人助我帮我，改变了我一生的轨迹，有些人待我似亲人，爱我如生命，他们就在那里，却再不肯见我。</p>
-<p> 世界上有70亿人口，我们这一生会遇到大约2920万人，在这茫茫人海里，两个人相爱的概率是0.00049。</p>
-<p>可是我再怎样庆幸着这难得的相遇，再怎样努力的经营，我甚至傻傻的恳求和挽留，却如何也掌控不了我们的未来。</p>
-<p>- 02 -</p>
-<p>这是流行离开的世界，但我们都不擅长告别 </p>
-<p>若说所有的相遇都是久别重逢，前世都欠下了，今生为何还是要走？</p>
-<p>知乎上有这样一个话题《如果世间所有的相遇都是久别重逢，那离别是为了什么？》</p>
-<p>有个回答很喜欢：</p>
-<p>“遇见，是两个人的事；离开，却是一个人的决定。遇见是一个开始，离开却是为了遇见下一个离开。这是一个流行离开的世界，但是我们都不擅长告别。”</p>
-<p>生的那一刻就是在一步步走向终结，遇见也是，相识相处的每分每秒都是在走向分别。</p>
-<p>只是我们从来就没想过分别到来的会如此的快，我们还未来得及演习。</p>
-<p>很喜欢的一部电影《一代宗师》，宫二这一世，未嫁娶，不传艺，争着一口气，直到最后。</p>
-<p>她对叶问有情，但他们只有情缘，没有结果，这一世的缘，是必定要绝的。</p>
-<p>记得里面有个画面，叶先生说：“你我之间，本没有恩怨。有的，只是一段缘分。”</p>
-<p>她黯然失神：“是的，我们之间，是一段缘分。或许今世的缘分，可以追溯到前世，寄望于后世。今世的愿绝了，死生契阔，我们每一世，都有愿成说。”</p>
-<p>是隐忍还是看开，总之看到她说的这句话时，内心相当的无奈又无力，明明那样相爱相惜，但还是主动选择了分开。</p>
-<p>电影里有句话这样说:“无生无死，才是最好的未来。”</p>
-<p>它说：“人生若无憾，那该多无趣啊。”</p>
-<p>当真是通透，还是逼自己断舍离，这样的决然和平静的一句话，我反复咀嚼了无数遍，聚散有时，就这样吧。</p>
-<p>- 03 -</p>
-<p>后会无期，天总会晴</p>
-<p>《本杰明·巴顿奇事》里说：“我们注定要失去我们所爱的人，要不然我们怎么会知道他们对我们多么的重要。”</p>
-<p>《玻璃之城》里说：“我们分开的日子，你不在我身边，我才最爱你。”</p>
-<p>你走后，我学会了自强，你不在后，我才懂得了珍惜，才真正的思考了自己的未来，明白了什么是自己想要和真心想做的，更学会了如何去爱。</p>
-<p>谢谢你的离开，我开始警醒，开始认真的活，谢谢你的决绝让我变成了更好的人。</p>
-<p>电影《后会无期》的最后有这么一段话：“跟人道别的时候，还是要用力一点，因为你多说一句，很可能是最后一句，多看一眼，指不定就是最后一眼……” </p>
-<p>很多时候，一转身，就是一辈子，所以相见时，要心存感激，像第一次，离别时，要好好告别，像最后一次。</p>
-<p>因为所有的遇见，都是一种偿还，你永远不知道，哪一天他（她）的使命得以终结，明天你们再不会见。</p>
+    <title>仓央嘉措诗集</title>
+    <url>/2020/05/24/%E4%BB%93%E5%A4%AE%E5%98%89%E6%8E%AA%E8%AF%97%E9%9B%86/</url>
+    <content><![CDATA[<p>1.住进布达拉宫，我是雪域最大的王。流浪在拉萨街头，我是世间最美的情郎。</p>
+<p>2.一个人需要隐藏多少秘密，才能巧妙地度过一生，这佛光闪闪的高原，三步两步便是天堂，却仍有那么多人，因心事过重而走不动。</p>
+<p>3.人生若只如初见，我是少年人，我有佛心也有凡心。向佛祖求参悟不了的惑，与有情人做快乐尽兴的事，不妄一场人生。</p>
+<p>4.我愿为你颠倒红尘，这是你我的命运。有一日，当你登临高峰，面向大海，你会看到一个云游四方的行僧。你的眼中有他，他却在回眸之间将你印入了心底。他是你的。</p>
+<p>5.最美是我的一生。每个人的一生，真实而美好。你所拥有即拥有，失去却不意味着失去。失去是另一种拥有，你要相信。你的失败与伟大，新生与寂灭，犹如花开花谢，简静自持，珍贵永远。</p>
+<p>6.我在人世之前，心随人世而去。我记得佛的话语，却忘记相问的初衷。我在人海之中寻觅一个日月永不相见的起源，如同，我背弃凡尘之后又惦念追随。</p>
+<p>7.我是天生的情痴，一日日不死心，心中的光明灭了，仍要去寻黑暗的火种，点燃永生。倘若永夜不变，我也要拉住一个人的手，与她共度。</p>
+<p>8.此时，此地，于日光之城，于红日神山，于观世音的圣殿，我是罗桑仁钦·仓央嘉措。</p>
+<p>9.缘起即灭，缘生已空，我的少年，失语多于失梦。我幽游深处探寻莲花的芬芳与清寂，意外寻到了最爱之人，她对我说：“你就是我的莲花。”</p>
+<p>10.世间事，除了生死，哪一件事不是闲事。——仓央嘉措</p>
+<p>11.我是佛前一朵莲花，我到人世来，被世人所误。我是凡尘最美的莲花，我不是普度众生的佛，我来寻我今生的情，与她谈一场风花雪月的爱。</p>
+<p>12.第一最好不相见，免得彼此相爱恋；第二最好不熟知，免得彼此苦相思！——仓央嘉措</p>
 ]]></content>
   </entry>
   <entry>
-    <title>日志</title>
-    <url>/2020/06/04/%E6%97%A5%E5%BF%97/</url>
-    <content><![CDATA[<p><img src="/images/%E6%97%A5%E5%BF%97%E7%BD%AE%E9%A1%B6.jpg" alt="alt"></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>用户在操作我们系统的过程中，针对一些重要的业务数据进行增删改查的时候，我们希望记录一下用户的操作行为，以便发生问题时能及时的找到依据，这种日志就是业务系统的操作日志。</p>
-<p>本篇我们来探讨下常见操作日志的实现方案和可行性</p>
-<h2 id="常见的操作日志类型"><a href="#常见的操作日志类型" class="headerlink" title="常见的操作日志类型"></a>常见的操作日志类型</h2><ul>
-<li>用户登录日志</li>
-<li>重要数据查询日志 （但电商可能不重要的数据也做埋点，比如在淘宝上你搜索什么商品，即使不买，一段时间内首页也会给你推荐类似的东西）</li>
-<li>重要数据变更日志 （如密码变更，权限变更，数据修改等）</li>
-<li>数据删除日志</li>
-<li>……</li>
-</ul>
-<p>总结来说，就是重要的增删改查根据业务的需要来做操作日志的埋点。</p>
-<h2 id="实现方案对比"><a href="#实现方案对比" class="headerlink" title="实现方案对比"></a>实现方案对比</h2><h3 id="基于AOP（切面）传统的实现方案"><a href="#基于AOP（切面）传统的实现方案" class="headerlink" title="基于AOP（切面）传统的实现方案"></a>基于AOP（切面）传统的实现方案</h3><ul>
-<li>优点：实现思路简单；</li>
-<li>缺点：增加数据库的负担，强依赖前端的传参，不方便拓展，不支持批量操作，不支持多表关联；</li>
-</ul>
-<h3 id="基于数据库Binlog"><a href="#基于数据库Binlog" class="headerlink" title="基于数据库Binlog"></a>基于数据库Binlog</h3><ul>
-<li>优点：解除了数据新旧变化的耦合，支持批量操作，方便多表关联拓展，不依赖开发语言；</li>
-<li>缺点：数据库表设计需要统一的约定；</li>
-</ul>
-<h2 id="方案实现细节"><a href="#方案实现细节" class="headerlink" title="方案实现细节"></a>方案实现细节</h2><h4 id="一、基于AOP切面-注解的传统方案"><a href="#一、基于AOP切面-注解的传统方案" class="headerlink" title="一、基于AOP切面+注解的传统方案"></a>一、基于AOP切面+注解的传统方案</h4><p>传统的做法就是切面+注解的方式，这种对代码的侵入性不强，通常记录ip、业务模块、操作账号、操作场景、操作来源等等，一般在注解+拦截器里这些值都拿得到，如下图所示：</p>
-<p>这种常见的我们在通用方法都可以处理，但是在数据变更方面，一直没有较好的实现方式，比如数据在变更前是多少，变更后是多少。</p>
-<p>以我们以前实现的一套方案来说，基于数据变更的记录方式不仅要和需求方约定好模板（上百个字段的不可能都做展示和记录），也要和前端做一些约定，比如在修改之前的值是多少，修改后的值是多少，如下代码客官请看：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;新值不能为空&quot;)</span><br><span class="line">@UpdateNewDataOperationLog</span><br><span class="line">private T newData;</span><br><span class="line"></span><br><span class="line">@Valid</span><br><span class="line">@NotNull(message &#x3D; &quot;旧值不能为空&quot;)</span><br><span class="line">@UpdateOldDataOperationLog</span><br><span class="line">private T oldData;</span><br></pre></td></tr></table></figure>
-
-<h3 id="存在的问题："><a href="#存在的问题：" class="headerlink" title="存在的问题："></a>存在的问题：</h3><ul>
-<li>1.旧值如果不多查询一次数据库则需要依赖前端把旧值封装到oldData对象中，很有可能已经不是修改前的值；</li>
-<li>2.无法处理批量的List数据；</li>
-<li>3.不支持多表操作；</li>
-</ul>
-<p>再以一个场景为例，再删除之前需要记录删除前的值，是不是还得再查一次~</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@PostMapping(&quot;&#x2F;delete&quot;)</span><br><span class="line">@ApiOperation(value &#x3D; &quot;删除用户信息&quot;, notes &#x3D; &quot;删除用户信息&quot;)</span><br><span class="line">@DeleteOperationLog(system &#x3D; SystemNameNewEnum.SYS_JMS_LMDM, module &#x3D; ModuleNameNewEnum.LMDM_AUTH, table &#x3D; LogBaseTableNameEnum.TABLE_USER, methodName &#x3D; &quot;detail&quot;)</span><br></pre></td></tr></table></figure>
-
-<h4 id="二、基于数据库Binlog-方案"><a href="#二、基于数据库Binlog-方案" class="headerlink" title="二、基于数据库Binlog 方案"></a>二、基于数据库Binlog 方案</h4><p>系统架构图如下：</p>
-<p><img src="/images/Binlog%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" alt="alt"></p>
-<p><strong>「主要分为3块：」</strong></p>
-<ul>
-<li><p>1：业务应用 生成每次操作的traceid，并更新到操作的业务表中，发送1条业务消息，包含当前操作的操作人相关的信息；</p>
-</li>
-<li><p>2：日志收集应用 对业务日志和转换后的binlog日志做整合，提供对外的日志查询搜索API；</p>
-</li>
-<li><p>3：日志处理应用</p>
-</li>
-<li><ul>
-<li>利用canal采集和解析业务库的binlog日志并投递到kafka中，解析后的记录中记录了当前操作的操作类型，如属于删除、修改、新增,和新旧值的记录，格式如下：</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;122158992930664499&quot;,&quot;bill_type&quot;:&quot;1&quot;,&quot;create_time&quot;:&quot;2020-04-2609:15:13&quot;,&quot;update_time&quot;:&quot;2020-04-2613:45:46&quot;,&quot;version&quot;:&quot;2&quot;,&quot;trace_id&quot;:&quot;exclude-f04ff706673d4e98a757396efb711173&quot;&#125;],</span><br><span class="line">&quot;database&quot;:&quot;yl_spmibill_8&quot;,</span><br><span class="line">&quot;es&quot;:1587879945200,</span><br><span class="line">&quot;id&quot;:17161259,</span><br><span class="line">&quot;isDdl&quot;:false,</span><br><span class="line">&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;bigint(20)&quot;,</span><br><span class="line">&quot;bill_type&quot;:&quot;tinyint(2)&quot;,</span><br><span class="line">&quot;create_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;update_time&quot;:&quot;timestamp&quot;,</span><br><span class="line">&quot;version&quot;:&quot;int(11)&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;varchar(50)&quot;&#125;,</span><br><span class="line">&quot;old&quot;:[&#123;&quot;update_time&quot;:&quot;2020-04-2613:45:45&quot;,</span><br><span class="line">&quot;version&quot;:&quot;1&quot;,</span><br><span class="line">&quot;trace_id&quot;:&quot;exclude-36aef98585db4e7a98f9694c8ef28b8c&quot;&#125;],</span><br><span class="line">&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,</span><br><span class="line">&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;bill_type&quot;:-6,&quot;create_time&quot;:93,&quot;update_time&quot;:93,&quot;version&quot;:4,&quot;trace_id&quot;:12&#125;,</span><br><span class="line">&quot;table&quot;:&quot;xxx_transfer_bill_117&quot;,</span><br><span class="line">&quot;ts&quot;:1587879945698,&quot;type&quot;:&quot;UPDATE&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>处理完binlon日志转换后的操作日志，如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;id&quot;:&quot;120716921250250776&quot;,</span><br><span class="line">&quot;relevanceInfo&quot;:&quot;XX0000097413282,&quot;,</span><br><span class="line">&quot;remark&quot;:&quot;签收财务网点编码由【】改为【380000】，</span><br><span class="line">签收网点名称由【】改为【泉州南安网点】，签收网点code由【】改为【2534104】，运单状态code由【204】改为【205】，签收财务网点名称由【】改为【福建代理区】，签收网点id由【0】改为【461】，签收标识,1是，0否由【0】改为【1】，签收时间由【null】改为【2020-04-24 21:09:47】，签收财务网点id由【0】改为【400】，&quot;,</span><br><span class="line">&quot;traceId&quot;:&quot;120716921250250775&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="库表设计"><a href="#库表设计" class="headerlink" title="库表设计"></a>库表设计</h3><ul>
-<li>1：所有业务系统表需要添加trace_id字段，每次操作生成一个随机字符串并保存到业务表中；</li>
-<li>2：日志收集应用库表设计</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#39;id&#39;,</span><br><span class="line">  &#96;database_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;数据库名&#39;,</span><br><span class="line">  &#96;table_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 数据库表名&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  UNIQUE KEY &#96;unq_data_name_table_name&#96; (&#96;database_name&#96;,&#96;table_name&#96;) USING BTREE COMMENT &#39;数据库名表名联合索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;35 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库配置表&#39;;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_config&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  &#96;table_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 数据库&#39;,</span><br><span class="line">  &#96;field_name&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;字段 中文名称&#39;,</span><br><span class="line">  &#96;enum_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否枚举字段(1:是,0:否)&#39;,</span><br><span class="line">  &#96;relevance_flag&#96; tinyint(2) DEFAULT NULL COMMENT &#39;是否是关联字段(1:是,0否)&#39;,</span><br><span class="line">  &#96;sort&#96; int(11) DEFAULT NULL COMMENT &#39;排序&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;idx_table_config_id&#96; (&#96;table_config_id&#96;) USING BTREE COMMENT &#39;表ID索引&#39;</span><br><span class="line">) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;2431 DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据库字段配置表&#39;;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE TABLE &#96;table_field_value&#96; (</span><br><span class="line">  &#96;id&#96; bigint(20) NOT NULL,</span><br><span class="line">  &#96;field_config_id&#96; bigint(20) DEFAULT NULL,</span><br><span class="line">  &#96;field_key&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39; 枚举&#39;,</span><br><span class="line">  &#96;filed_value&#96; varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT &#39;枚举名称&#39;,</span><br><span class="line">  PRIMARY KEY (&#96;id&#96;),</span><br><span class="line">  KEY &#96;ids_field_config_id&#96; (&#96;field_config_id&#96;) USING BTREE</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8mb4 COLLATE&#x3D;utf8mb4_0900_ai_ci COMMENT&#x3D;&#39;数据字典配置表&#39;;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/binlog%E5%BA%93%E8%A1%A8%E8%AE%BE%E8%AE%A1%E8%A7%86%E5%9B%BE.jpg" alt="alt"></p>
-<h2 id="基于binlog实现方案未来规划"><a href="#基于binlog实现方案未来规划" class="headerlink" title="基于binlog实现方案未来规划"></a>基于binlog实现方案未来规划</h2><ol>
-<li>优化发送业务消息的实现，使用切面拦截减少对业务代码的侵入；</li>
-<li>目前暂时不支持对多表关联操作日志记录，需要拓展；</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文以操作日志为题材讨论了操作日志的实现方案和可行性，并且都已经在功能上进行实现，其中使用aop方案也是大部分中小企业的首选实现方案，但是在一些金融领域以及erp相关系统，对操作日志记录明细要求极高，常见技术方案很难满足，即使能够满足也会带来一些代码强侵入以及性能问题。</p>
-<p>所以我们又讨论了基于binlog实现的方案，该方案虽然比对aop来说增强了技术的复杂性，但是对于有一定技术积累的团队来说不算什么难事，并且该方案我们都实现了上线，并且解决了代码层面上的侵入，属于跨语言级别的，相信对读者还是有一定的启发。</p>
+    <title>一个老程序员的忠告：不要一辈子靠技术生存</title>
+    <url>/2020/09/07/%E4%B8%80%E4%B8%AA%E8%80%81%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E5%BF%A0%E5%91%8A%EF%BC%9A%E4%B8%8D%E8%A6%81%E4%B8%80%E8%BE%88%E5%AD%90%E9%9D%A0%E6%8A%80%E6%9C%AF%E7%94%9F%E5%AD%98/</url>
+    <content><![CDATA[<p><img src="https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_jpg/1hReHaqafaexqh42v2icRsgclq0biaVictCI6XFXQ7O2Dlpj01n6Byycdjscs83tnicED9ys9uJ6Xqtcsm8lngGn4Q/640?wx_fmt=jpeg" alt="640?wx_fmt=jpeg"></p>
+<p>图丨《Ready Player One》</p>
+<p>文丨源：世界经理人<br>我现在是自己做，但我此前有多年在从事软件开发工作，当回过头来想一想自己，觉得特别想对那些初学JAVA/DOT。NET技术的朋友说点心里话，希望你们能从我们的体会中，多少受点启发(也许我说的不好，你不赞同但看在我真心的份上别扔砖头啊)。</p>
+<p>一、在中国你千万不要因为学习技术就可以换来稳定的生活和高的薪水待遇，你更千万不要认为那些从事市场开发，跑腿的人，没有前途。</p>
+<p>不知道你是不是知道，咱们中国有相当大的一部分软件公司，他们的软件开发团队都小的可怜，甚至只有1-3个人，连一个项目小组都算不上，而这样的团队却要承担一个软件公司所有的软件开发任务，在软件上线和开发的关键阶段需要团队的成员没日没夜的加班，还需要为测试出的BUG和不能按时提交的软件模块功能而心怀忐忑，有的时候如果你不幸加入现场开发的团队你则需要背井离乡告别你的女友，进行封闭开发，你平时除了编码之外就是吃饭和睡觉（有钱的公司甚至请个保姆为你做饭，以让你节省出更多的时间来投入到工作中，让你一直在那种累了就休息，不累就立即工作的状态）<br>更可怕的是，会让你接触的人际关系非常单一，除了有限的技术人员之外你几乎见不到做其他行业工作和职位的人，你的朋友圈子小且单一，甚至破坏你原有的爱情（想象一下，你在外地做现场开发2个月以上，却从没跟女友见过一面的话，你的女友是不是会对你呲牙裂嘴）。<br>也许你拿到了所谓的白领的工资，但你却从此失去享受生活的自由，如果你想做技术人员尤其是开发人员，我想你很快就会理解，你多么想在一个地方长期待一段时间，认识一些朋友，多一些生活时间的愿望。<br>比之于我们的生活和人际关系及工作，那些从事售前和市场开发的朋友，却有比我们多的多的工作之外的时间，甚至他们工作的时间有的时候是和生活的时间是可以兼顾的，他们可以通过市场开发，认识各个行业的人士，可以认识各种各样的朋友，他们比我们坦率说更有发财和发展的机会，只要他们跟我们一样勤奋。（有一种勤奋的普通人，如果给他换个地方，他马上会成为一个勤奋且出众的人。）</p>
+<p>二、在学习技术的时候千万不要认为如果做到技术最强，就可以成为100%受尊重的人。</p>
+<p><img src="https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_jpg/1hReHaqafaexqh42v2icRsgclq0biaVictCKg6kZwAeVGiaZjaPAESVSwFJCtNahfw50XJwFxXW6yZ5d9nZkpyAicpw/640?wx_fmt=jpeg" alt="640?wx_fmt=jpeg"></p>
+<p>图丨《Ready Player One》</p>
+<p>有一次一个人在面试项目经理的时候说了这么一段话：我只用最听话的人，按照我的要求做只要是听话就要，如果不听话不管他技术再好也不要。随后这个人得到了试用机会，如果没意外的话，他一定会是下一个项目经理的继任者。<br>朋友们你知道吗？不管你技术有多强，你也不可能自由的腾出时间象别人那样研究一下LINUX源码，甚至写一个LINUX样的杰作来表现你的才能。你需要做的就是按照要求写代码，写代码的含义就是都规定好，你按照规定写，你很快就会发现你昨天写的代码，跟今天写的代码有很多类似，等你写过一段时间的代码，你将领略：复制，拷贝，粘贴那样的技术对你来说是何等重要。（如果你没有做过1年以上的真正意义上的开发不要反驳我）。<br>如果你幸运的能够听到市场人员的谈话，或是领导们的谈话，你会隐约觉得他们都在把技术人员当作编码的机器来看，你的价值并没有你想象的那么重要。而在你所在的团队内部，你可能正在为一个技术问题的讨论在跟同事搞内耗，因为他不服你，你也不服他，你们都认为自己的对，其实你们两个都对，而争论的目的就是为了在关键场合证明一下自己比对方技术好，比对方强。（在一个项目开发中，没有人愿意长期听别人的，总想换个位置领导别人。）</p>
+<p>三、你更不要认为，如果我技术够好，我就自己创业，自己有创业的资本，因为自己是搞技术的。</p>
+<p><img src="https://ss.csdn.net/p?https://mmbiz.qpic.cn/mmbiz_jpg/1hReHaqafaexqh42v2icRsgclq0biaVictCUqP4V6VHCvjv9FczNbr9Wkg5bKiaUWz1icQAnYjKvjcyK59JQbvfNImQ/640?wx_fmt=jpeg" alt="640?wx_fmt=jpeg"></p>
+<p>图丨《Ready Player One》</p>
+<p>如果你那样认为，真的是大错特错了，你可以做个调查在非技术人群中，没有几个人知道C#与JAVA的，更谈不上来欣赏你的技术是好还是不好。一句话，技术仅仅是一个工具，善于运用这个工具为别人干活的人，却往往不太擅长用这个工具来为自己创业，因为这是两个概念，训练的技能也是完全不同的。<br>创业最开始的时候，你的人际关系，你处理人际关系的能力，你对社会潜规则的认识，还有你明白不明白别人的心，你会不会说让人喜欢的话，还有你对自己所提供的服务的策划和推销等等，也许有一万，一百万个值得我们重视的问题，但你会发现技术却很少有可能包含在这一万或一百万之内，如果你创业到了一个快成功的阶段，你会这样告诉自己：我干吗要亲自做技术，我聘一个人不就行了，这时候你才真正会理解技术的作用，和你以前做技术人员的作用。</p>
+<p>小结</p>
+<p>基于上面的讨论，我奉劝那些学习技术的朋友，千万不要拿科举考试样的心态去学习技术,对技术的学习几近的痴迷，想掌握所有所有的技术，以让自己成为技术领域的权威和专家，以在必要的时候或是心里不畅快的时候到网上对着菜鸟说自己是前辈。<br>技术仅仅是一个工具，是你在人生一个阶段生存的工具，你可以一辈子喜欢他，但最好不要一辈子靠它生存。<br>掌握技术的唯一目的就是拿它找工作（如果你不想把技术当作你第二生命的话），就是干活。所以你在学习的时候千万不要去做那些所谓的技术习题或是研究那些冒泡算法，最大数算法了，什么叫干活？<br>就是做一个东西让别人用，别人用了，可以提高他们的工作效率，想象吧，你做1万道技术习题有什么用？只会让人觉得酸腐，还是在学习的时候，多培养些自己务实的态度吧，比如研究一下当地市场目前有哪些软件公司用人，自己离他们的要求到底有多远，自己具体应该怎么做才可以达到他们的要求。等你分析完这些，你就会发现，找工作成功，技术的贡献率其实并没有你原来想象的那么高。</p>
+<p>不管你是学习技术为了找工作还是创业，你都要对技术本身有个清醒的认识，在中国不会出现BILL GATES，因为，中国目前还不是十分的尊重技术人才，还仅仅的停留在把软件技术人才当作人才机器来用的尴尬境地。（如果你不理解，一种可能是你目前仅仅从事过技术工作，你的朋友圈子里技术类的朋友占了大多数，一种可能是你还没有工作，但喜欢读比尔·盖茨的传记）。</p>
+<p>-THE END-</p>
 ]]></content>
   </entry>
 </search>
